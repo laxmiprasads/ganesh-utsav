@@ -154,6 +154,52 @@ label {
   font-weight: 700;
 }
 
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-wrapper input {
+  padding-right: 46px;
+}
+
+.password-wrapper .toggle-password {
+  position: absolute;
+  right: 6px;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  min-height: 32px;
+  height: 32px;
+  width: 34px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transform: none;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.password-wrapper .toggle-password:hover {
+  background: var(--bg-main);
+  color: var(--primary);
+  border: none;
+}
+
+.password-wrapper .toggle-password:active {
+  transform: none !important;
+  background: var(--gold-light);
+  color: var(--primary);
+  border: none;
+}
+
 /* Visibility Utilities */
 .desktop-only { display: block; }
 /* The card lists below a table are also styled by .mobile-card-list, which is why hiding them

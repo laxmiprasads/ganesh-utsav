@@ -30,14 +30,10 @@ Committee APIs require JWT authentication and `COMMITTEE` role under `/api/commi
 Contribution screenshots and expense receipt photos are uploaded through `POST /api/committee/uploads`
 and stored on disk under the `UPLOAD_DIR` folder (`uploads` by default), then served back from `/uploads/**`.
 
-## Development Credentials
+## Committee Credentials
 
-The backend seeds one development committee user:
-
-- Username: `admin`
-- Password: `Admin@123`
-
-Change this credential before production use.
+- Username: `Prasad`
+- Password: `Prasad@122006`
 
 ## Backend Setup
 

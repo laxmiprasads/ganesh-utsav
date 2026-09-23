@@ -18,7 +18,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
         <a routerLink="/contributions" routerLinkActive="active">Contributions</a>
         <a routerLink="/expenses" routerLinkActive="active">Expenses</a>
         <a routerLink="/auctions" routerLinkActive="active">Auctions</a>
-        <a routerLink="/committee/login">Committee</a>
       </nav>
     </header>
     <main class="public-shell">

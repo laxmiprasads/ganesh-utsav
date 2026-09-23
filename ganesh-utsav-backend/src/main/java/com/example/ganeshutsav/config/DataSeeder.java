@@ -19,14 +19,17 @@ public class DataSeeder {
             PasswordEncoder passwordEncoder
     ) {
         return args -> {
-            users.findByUsername("admin").orElseGet(() -> {
+            User prasad = users.findByUsername("Prasad").orElseGet(() -> {
                 User user = new User();
-                user.setUsername("admin");
-                user.setPasswordHash(passwordEncoder.encode("Admin@123"));
+                user.setUsername("Prasad");
                 user.setRole(Role.COMMITTEE);
-                user.setActive(true);
-                return users.save(user);
+                return user;
             });
+            prasad.setPasswordHash(passwordEncoder.encode("Prasad@122006"));
+            prasad.setActive(true);
+            users.save(prasad);
+
+            users.findByUsername("admin").ifPresent(users::delete);
 
             if (expenseCategories.count() == 0) {
                 List.of("Decoration", "Food", "Sound System", "Lighting", "Idol", "Pooja Materials", "Cleaning", "Transportation", "Prasadam", "Events", "Printing", "Other")
