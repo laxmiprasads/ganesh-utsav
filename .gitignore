@@ -1,0 +1,73 @@
+# ==========================================
+# Root .gitignore for Ganesh Utsav Fullstack
+# ==========================================
+
+# OS & Temp Files
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+*.swp
+*.log
+
+# IDE & Editor Files
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+*.sublime-project
+*.sublime-workspace
+
+# ==========================================
+# Backend (Java / Spring Boot / Maven)
+# ==========================================
+**/target/
+target/
+.mvn/
+mvnw
+mvnw.cmd
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Backend Uploads & Local Media
+ganesh-utsav-backend/uploads/*
+!ganesh-utsav-backend/uploads/.gitkeep
+uploads/
+
+# Spring / Application Logs
+**/logs/
+logs/
+
+# ==========================================
+# Frontend (Angular / Node / TypeScript)
+# ==========================================
+**/node_modules/
+node_modules/
+**/.angular/
+.angular/
+**/dist/
+dist/
+.env
+.env.*.local
+
+# Package Manager Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Test & Coverage
+**/coverage/
+coverage/
+.nyc_output/
