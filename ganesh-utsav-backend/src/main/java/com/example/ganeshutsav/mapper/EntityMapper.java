@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 public class EntityMapper {
     public ContributionDtos.ContributionResponse contribution(Contribution c) {
         String occasion = c.getOccasion() == null || c.getOccasion().isBlank() ? "Ganesh Chaturthi" : c.getOccasion();
-        return new ContributionDtos.ContributionResponse(c.getId(), c.getContributorName(), c.getFlatNumber(), c.getAmount(), c.getPaymentMethod(), c.getTransactionId(), c.getPaidTo(), c.getPaymentProofPath(), c.getPaymentDate(), c.getStatus(), occasion, c.getNotes(), c.getCreatedAt(), c.getUpdatedAt());
+        String createdBy = c.getCreatedBy() == null ? null : c.getCreatedBy().getUsername();
+        return new ContributionDtos.ContributionResponse(c.getId(), c.getContributorName(), c.getFlatNumber(), c.getAmount(), c.getPaymentMethod(), c.getTransactionId(), c.getPaidTo(), c.getPaymentProofPath(), c.getPaymentDate(), c.getStatus(), occasion, c.getNotes(), createdBy, c.getCreatedAt(), c.getUpdatedAt());
     }
 
     public ExpenseDtos.CategoryResponse expenseCategory(ExpenseCategory c) {
@@ -22,7 +23,8 @@ public class EntityMapper {
     public ExpenseDtos.ExpenseResponse expense(Expense e) {
         ExpenseCategory category = e.getCategory();
         String occasion = e.getOccasion() == null || e.getOccasion().isBlank() ? "Ganesh Chaturthi" : e.getOccasion();
-        return new ExpenseDtos.ExpenseResponse(e.getId(), category == null ? null : category.getId(), category == null ? null : category.getName(), e.getDescription(), e.getAmount(), e.getExpenseDate(), e.getPaidBy(), e.getReceiptUrl(), occasion, e.getNotes(), e.getStatus(), e.getCreatedAt(), e.getUpdatedAt());
+        String createdBy = e.getCreatedBy() == null ? null : e.getCreatedBy().getUsername();
+        return new ExpenseDtos.ExpenseResponse(e.getId(), category == null ? null : category.getId(), category == null ? null : category.getName(), e.getDescription(), e.getAmount(), e.getExpenseDate(), e.getPaidBy(), e.getReceiptUrl(), occasion, e.getNotes(), e.getStatus(), createdBy, e.getCreatedAt(), e.getUpdatedAt());
     }
 
     public AuctionDtos.AuctionResponse auction(Auction a) {

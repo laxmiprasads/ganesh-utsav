@@ -28,5 +28,5 @@ public final class ExpenseDtos {
             RecordStatus status
     ) {}
 
-    public record ExpenseResponse(Long id, Long categoryId, String category, String description, BigDecimal amount, LocalDate expenseDate, String paidBy, String receiptUrl, String occasion, String notes, RecordStatus status, Instant createdAt, Instant updatedAt) {}
+    public record ExpenseResponse(Long id, Long categoryId, String category, String description, BigDecimal amount, LocalDate expenseDate, String paidBy, String receiptUrl, String occasion, String notes, RecordStatus status, String createdBy, Instant createdAt, Instant updatedAt) {}
 }

@@ -34,17 +34,6 @@ type StatCard = { label: string; value: number; note?: string; noteValue?: numbe
 
       <section class="admin-grid">
         <article class="panel">
-          <h2>Collection vs Expenses</h2>
-          @for (point of stats()!.collectionVsExpenses; track point.label) {
-            <div class="bar-row">
-              <span>{{ point.label }}</span>
-              <div class="bar"><i [style.width.%]="barWidth(point.value)"></i></div>
-              <strong>{{ point.value | currency:'INR':'symbol':'1.0-0':'en-IN' }}</strong>
-            </div>
-          }
-        </article>
-
-        <article class="panel">
           <h2>Recent Contributions</h2>
           @for (row of stats()!.recentContributions; track row.id) {
             <p class="list-line">
@@ -112,11 +101,6 @@ export class PublicDashboard implements OnInit {
       { label: 'Total Expenses', value: s.expenseTotal },
       { label: 'Balance', value: s.balance }
     ];
-  }
-
-  barWidth(value: number) {
-    const max = Math.max(...(this.stats()?.collectionVsExpenses.map(p => p.value) ?? [1]), 1);
-    return Math.max(6, (value / max) * 100);
   }
 }
 

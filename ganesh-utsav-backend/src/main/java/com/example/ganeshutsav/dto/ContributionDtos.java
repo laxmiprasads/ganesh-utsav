@@ -27,7 +27,7 @@ public final class ContributionDtos {
             @Size(max = 500) String notes
     ) {}
 
-    public record ContributionResponse(Long id, String contributorName, String flatNumber, BigDecimal amount, PaymentMethod paymentMethod, String transactionId, String paidTo, String paymentProofPath, LocalDate paymentDate, PaymentStatus status, String occasion, String notes, Instant createdAt, Instant updatedAt) {}
+    public record ContributionResponse(Long id, String contributorName, String flatNumber, BigDecimal amount, PaymentMethod paymentMethod, String transactionId, String paidTo, String paymentProofPath, LocalDate paymentDate, PaymentStatus status, String occasion, String notes, String createdBy, Instant createdAt, Instant updatedAt) {}
 
     public record PublicContributionResponse(String name, String flatNumber, BigDecimal amount) {}
 }

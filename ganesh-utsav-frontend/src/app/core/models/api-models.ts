@@ -43,6 +43,7 @@ export interface Contribution {
   status: PaymentStatus;
   occasion?: string;
   notes?: string;
+  createdBy?: string;
 }
 
 export interface Category {
@@ -63,6 +64,7 @@ export interface Expense {
   occasion?: string;
   notes?: string;
   status: RecordStatus;
+  createdBy?: string;
 }
 
 /** One receipt recorded against an auction, oldest first in the auction's ledger. */

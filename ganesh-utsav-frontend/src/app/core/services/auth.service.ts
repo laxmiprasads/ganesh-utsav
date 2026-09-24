@@ -31,6 +31,10 @@ export class AuthService {
     );
   }
 
+  register(username: string, password: string) {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/auth/register`, { username, password });
+  }
+
   token() {
     return this.tokenState();
   }

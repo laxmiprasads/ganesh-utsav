@@ -36,7 +36,19 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
         <!-- Desktop Table View -->
         <div class="table-card flat desktop-only"><table><thead><tr><th>Date</th><th>Occasion</th><th>Description</th><th class="num">Amount</th></tr></thead><tbody>
           @for (row of rows(); track row.id) {
-            <tr><td>{{ row.expenseDate | date:'dd MMM yyyy' }}</td><td><span class="badge occasion-badge">{{ row.occasion || 'Ganesh Chaturthi' }}</span></td><td>{{ row.description }}</td><td class="num">{{ row.amount | currency:'INR':'symbol':'1.0-0':'en-IN' }}</td></tr>
+            <tr>
+              <td>{{ row.expenseDate | date:'dd MMM yyyy' }}</td>
+              <td><span class="badge occasion-badge">{{ row.occasion || 'Ganesh Chaturthi' }}</span></td>
+              <td>
+                <div class="expense-desc-group">
+                  <span>{{ row.description }}</span>
+                  @if (row.createdBy) {
+                    <span class="recorded-by-tag">recorded by {{ row.createdBy }}</span>
+                  }
+                </div>
+              </td>
+              <td class="num">{{ row.amount | currency:'INR':'symbol':'1.0-0':'en-IN' }}</td>
+            </tr>
           } @empty { <tr><td colspan="4" class="empty">No expenses found.</td></tr> }
         </tbody></table></div>
 
@@ -48,7 +60,12 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
                 <span class="card-date">{{ row.expenseDate | date:'dd MMM yyyy' }}</span>
                 <span class="badge occasion-badge">{{ row.occasion || 'Ganesh Chaturthi' }}</span>
               </div>
-              <p class="card-desc">{{ row.description }}</p>
+              <div class="expense-desc-group">
+                <p class="card-desc">{{ row.description }}</p>
+                @if (row.createdBy) {
+                  <span class="recorded-by-tag">recorded by {{ row.createdBy }}</span>
+                }
+              </div>
               <div class="card-footer-row">
                 <span class="card-date">Amount</span>
                 <span class="card-amount expense">{{ row.amount | currency:'INR':'symbol':'1.0-0':'en-IN' }}</span>

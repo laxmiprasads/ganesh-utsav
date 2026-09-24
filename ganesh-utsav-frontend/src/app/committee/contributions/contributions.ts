@@ -39,7 +39,12 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
               <div class="card-avatar">{{ row.contributorName.charAt(0).toUpperCase() }}</div>
               <div class="card-main">
                 <div class="card-title-row">
-                  <strong>{{ row.contributorName }}</strong>
+                  <div class="contributor-title-group">
+                    <strong>{{ row.contributorName }}</strong>
+                    @if (row.createdBy) {
+                      <span class="recorded-by-tag">recorded by {{ row.createdBy }}</span>
+                    }
+                  </div>
                   <div class="card-right">
                     <span class="card-amount">{{ row.amount | currency:'INR':'symbol':'1.0-0':'en-IN' }}</span>
                     <span class="badge occasion-badge">{{ row.occasion || 'Ganesh Chaturthi' }}</span>

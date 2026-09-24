@@ -26,10 +26,46 @@ type StatCard = { label: string; value: number; note?: string; noteValue?: numbe
         }
       </section>
       <section class="admin-grid">
-        <article class="panel"><h2>Collection vs Expenses</h2>@for (point of stats()!.collectionVsExpenses; track point.label) { <div class="bar-row"><span>{{ point.label }}</span><div class="bar"><i [style.width.%]="barWidth(point.value)"></i></div><strong>{{ point.value | currency:'INR':'symbol':'1.0-0':'en-IN' }}</strong></div> }</article>
-        <article class="panel"><h2>Recent Contributions</h2>@for (row of stats()!.recentContributions; track row.id) { <p class="list-line"><span>{{ row.contributorName }}</span><strong>{{ row.amount | currency:'INR':'symbol':'1.0-0':'en-IN' }}</strong></p> }</article>
-        <article class="panel"><h2>Recent Expenses</h2>@for (row of stats()!.recentExpenses; track row.id) { <p class="list-line"><span>{{ row.description }}</span><strong>{{ row.amount | currency:'INR':'symbol':'1.0-0':'en-IN' }}</strong></p> }</article>
-        <article class="panel"><h2>Recent Auctions</h2>@for (row of stats()!.recentAuctions; track row.id) { <p class="list-line"><span>{{ row.auctionName }} - {{ row.winner }} <span class="badge status-{{ (row.paymentStatus || '').toLowerCase() }}">{{ row.paymentStatus }}</span></span><strong><span>{{ row.amountPaid | currency:'INR':'symbol':'1.0-0':'en-IN' }}</span> @if (row.balance > 0) { <small>of {{ row.winningAmount | currency:'INR':'symbol':'1.0-0':'en-IN' }} · {{ row.balance | currency:'INR':'symbol':'1.0-0':'en-IN' }} pending</small> }</strong></p> }</article>
+        <article class="panel">
+          <h2>Recent Contributions</h2>
+          @for (row of stats()!.recentContributions; track row.id) {
+            <p class="list-line">
+              <span>{{ row.contributorName }}</span>
+              <strong>{{ row.amount | currency:'INR':'symbol':'1.0-0':'en-IN' }}</strong>
+            </p>
+          } @empty {
+            <p class="empty">No recent contributions.</p>
+          }
+        </article>
+
+        <article class="panel">
+          <h2>Recent Expenses</h2>
+          @for (row of stats()!.recentExpenses; track row.id) {
+            <p class="list-line">
+              <span>{{ row.description }}</span>
+              <strong>{{ row.amount | currency:'INR':'symbol':'1.0-0':'en-IN' }}</strong>
+            </p>
+          } @empty {
+            <p class="empty">No recent expenses.</p>
+          }
+        </article>
+
+        <article class="panel">
+          <h2>Recent Auctions</h2>
+          @for (row of stats()!.recentAuctions; track row.id) {
+            <p class="list-line">
+              <span><b>{{ row.auctionName }}</b> - {{ row.winner }} <span class="badge status-{{ (row.paymentStatus || '').toLowerCase() }}">{{ row.paymentStatus }}</span></span>
+              <strong>
+                <span>{{ row.amountPaid | currency:'INR':'symbol':'1.0-0':'en-IN' }}</span>
+                @if (row.balance > 0) {
+                  <small>of {{ row.winningAmount | currency:'INR':'symbol':'1.0-0':'en-IN' }} · {{ row.balance | currency:'INR':'symbol':'1.0-0':'en-IN' }} pending</small>
+                }
+              </strong>
+            </p>
+          } @empty {
+            <p class="empty">No recent auctions.</p>
+          }
+        </article>
       </section>
     } @else {
       <div class="state">Loading dashboard...</div>
@@ -50,9 +86,5 @@ export class CommitteeDashboard implements OnInit {
       { label: 'Total Expenses', value: s.expenseTotal },
       { label: 'Balance', value: s.balance }
     ];
-  }
-  barWidth(value: number) {
-    const max = Math.max(...(this.stats()?.collectionVsExpenses.map(p => p.value) ?? [1]), 1);
-    return Math.max(6, (value / max) * 100);
   }
 }
