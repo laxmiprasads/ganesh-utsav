@@ -1,7 +1,9 @@
 package com.example.ganeshutsav.config;
-
-import com.example.ganeshutsav.entity.*;
-import com.example.ganeshutsav.repository.*;
+import com.example.ganeshutsav.entity.ExpenseCategory;
+import com.example.ganeshutsav.entity.Role;
+import com.example.ganeshutsav.entity.User;
+import com.example.ganeshutsav.repository.ExpenseCategoryRepository;
+import com.example.ganeshutsav.repository.UserRepository;
 import java.util.List;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -19,25 +21,37 @@ public class DataSeeder {
             PasswordEncoder passwordEncoder
     ) {
         return args -> {
-            User prasad = users.findByUsername("Prasad").orElseGet(() -> {
+            // Create initial committee user only if it doesn't exist
+            if (users.findByUsername("Prasad").isEmpty()) {
                 User user = new User();
                 user.setUsername("Prasad");
                 user.setRole(Role.COMMITTEE);
-                return user;
-            });
-            prasad.setPasswordHash(passwordEncoder.encode("Prasad@122006"));
-            prasad.setActive(true);
-            users.save(prasad);
-
-            users.findByUsername("admin").ifPresent(users::delete);
-
+                user.setPasswordHash(
+                        passwordEncoder.encode("Prasad@122006")
+                );
+                user.setActive(true);
+                users.save(user);
+            }
+            // Seed expense categories only once
             if (expenseCategories.count() == 0) {
-                List.of("Decoration", "Food", "Sound System", "Lighting", "Idol", "Pooja Materials", "Cleaning", "Transportation", "Prasadam", "Events", "Printing", "Other")
-                        .forEach(name -> {
-                            ExpenseCategory c = new ExpenseCategory();
-                            c.setName(name);
-                            expenseCategories.save(c);
-                        });
+                List.of(
+                        "Decoration",
+                        "Food",
+                        "Sound System",
+                        "Lighting",
+                        "Idol",
+                        "Pooja Materials",
+                        "Cleaning",
+                        "Transportation",
+                        "Prasadam",
+                        "Events",
+                        "Printing",
+                        "Other"
+                ).forEach(name -> {
+                    ExpenseCategory category = new ExpenseCategory();
+                    category.setName(name);
+                    expenseCategories.save(category);
+                });
             }
         };
     }
