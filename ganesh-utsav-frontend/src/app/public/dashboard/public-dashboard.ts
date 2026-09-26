@@ -3,6 +3,9 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ApiService } from '../../core/services/api.service';
 import { DashboardStats } from '../../core/models/api-models';
 
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RefreshService } from '../../core/services/refresh.service';
+
 type StatCard = { label: string; value: number; note?: string; noteValue?: number };
 
 @Component({
@@ -82,9 +85,17 @@ export class PublicDashboard implements OnInit {
   loading = signal(true);
   error = signal('');
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private refreshService: RefreshService) {
+    this.refreshService.refresh$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.load();
+    });
+  }
 
   ngOnInit() {
+    this.load();
+  }
+
+  load() {
     this.api.publicDashboard().subscribe({
       next: stats => { this.stats.set(stats); this.loading.set(false); },
       error: () => { this.error.set('Unable to load dashboard. Please try again later.'); this.loading.set(false); }

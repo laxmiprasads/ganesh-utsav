@@ -1,6 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiService } from '../../core/services/api.service';
+import { RefreshService } from '../../core/services/refresh.service';
 import { DashboardStats } from '../../core/models/api-models';
 
 type StatCard = { label: string; value: number; note?: string; noteValue?: number };
@@ -74,8 +76,21 @@ type StatCard = { label: string; value: number; note?: string; noteValue?: numbe
 })
 export class CommitteeDashboard implements OnInit {
   stats = signal<DashboardStats | null>(null);
-  constructor(private api: ApiService) {}
-  ngOnInit() { this.api.committeeDashboard().subscribe(stats => this.stats.set(stats)); }
+
+  constructor(private api: ApiService, private refreshService: RefreshService) {
+    this.refreshService.refresh$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.load();
+    });
+  }
+
+  ngOnInit() {
+    this.load();
+  }
+
+  load() {
+    this.api.committeeDashboard().subscribe(stats => this.stats.set(stats));
+  }
+
   cards(): StatCard[] {
     const s = this.stats();
     if (!s) return [];

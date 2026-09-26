@@ -1,7 +1,9 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { RefreshService } from '../../core/services/refresh.service';
 import { Auction } from '../../core/models/api-models';
 import { auctionReport } from '../../committee/auctions/auctions-report';
 import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
@@ -167,11 +169,18 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
 })
 export class PublicAuctions implements OnInit {
   private api = inject(ApiService);
+  private refreshService = inject(RefreshService);
   private readonly backend = 'http://localhost:8080';
   rows = signal<Auction[]>([]);
   visible = signal<Auction[]>([]);
   searchText = '';
   private datePipe = new DatePipe('en-IN');
+
+  constructor() {
+    this.refreshService.refresh$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.load();
+    });
+  }
 
   ngOnInit() {
     this.load();

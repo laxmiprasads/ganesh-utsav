@@ -1,8 +1,10 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { RefreshService } from '../../core/services/refresh.service';
 import { Contribution } from '../../core/models/api-models';
 import { contributionReport } from './contributions-report';
 import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
@@ -15,13 +17,13 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
     <section class="editor-grid">
       <form class="panel form-panel" [formGroup]="form" (ngSubmit)="save()">
         <h2>Add Contribution</h2>
-        <label>Contributor Name <input formControlName="contributorName" placeholder="Contributor name"></label>
+        <label>Contributor Name <span class="req">*</span> <input formControlName="contributorName" placeholder="Contributor name"></label>
         <label>Flat Number <input formControlName="flatNumber" placeholder="Flat number (optional)"></label>
-        <label>Occasion <select formControlName="occasion"><option value="Ganesh Chaturthi">Ganesh Chaturthi</option><option value="Durga Matha Navaratri">Durga Matha Navaratri</option></select></label>
-        <label>Amount <input type="number" formControlName="amount"></label>
-        <label>Payment Method <select formControlName="paymentMethod" (ngModelChange)="onMethodChange($event)"><option>CASH</option><option>UPI</option><option>BANK_TRANSFER</option><option>OTHER</option></select></label>
-        <label>Paid To <input formControlName="paidTo" placeholder="Receiver name"></label>
-        <label>Payment Date <input type="date" formControlName="paymentDate"></label>
+        <label>Occasion <span class="req">*</span> <select formControlName="occasion"><option value="Ganesh Chaturthi">Ganesh Chaturthi</option><option value="Durga Matha Navaratri">Durga Matha Navaratri</option></select></label>
+        <label>Amount <span class="req">*</span> <input type="number" formControlName="amount"></label>
+        <label>Payment Method <span class="req">*</span> <select formControlName="paymentMethod" (ngModelChange)="onMethodChange($event)"><option>CASH</option><option>UPI</option><option>BANK_TRANSFER</option><option>OTHER</option></select></label>
+        <label>Paid To <span class="req">*</span> <input formControlName="paidTo" placeholder="Receiver name"></label>
+        <label>Payment Date <span class="req">*</span> <input type="date" formControlName="paymentDate"></label>
         <label>Notes <textarea formControlName="notes"></textarea></label>
         @if (error()) { <div class="state error compact">{{ error() }}</div> }
         <div class="actions"><button class="primary" type="submit" [disabled]="form.invalid || saving()">{{ saving() ? 'Saving...' : 'Save' }}</button><button type="button" (click)="reset()">Clear</button></div>
@@ -76,6 +78,7 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
 export class Contributions implements OnInit {
   private fb = inject(FormBuilder);
   private api = inject(ApiService);
+  private refreshService = inject(RefreshService);
   private readonly backend = 'http://localhost:8080';
   rows = signal<Contribution[]>([]);
   paymentMethod = signal('CASH');
@@ -94,6 +97,12 @@ export class Contributions implements OnInit {
     paymentDate: [new Date().toISOString().slice(0, 10), Validators.required],
     notes: ['']
   });
+
+  constructor() {
+    this.refreshService.refresh$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.load();
+    });
+  }
 
   ngOnInit() { this.load(); }
   load() { this.api.contributions({ search: this.search }).subscribe(rows => this.rows.set(rows)); }

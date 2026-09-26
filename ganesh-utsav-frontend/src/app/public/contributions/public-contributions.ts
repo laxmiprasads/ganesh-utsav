@@ -6,6 +6,9 @@ import { Contribution } from '../../core/models/api-models';
 import { contributionReport } from '../../committee/contributions/contributions-report';
 import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
 
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RefreshService } from '../../core/services/refresh.service';
+
 @Component({
   selector: 'app-public-contributions',
   imports: [CurrencyPipe, DatePipe, FormsModule],
@@ -56,10 +59,17 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
 })
 export class PublicContributions implements OnInit {
   private api = inject(ApiService);
+  private refreshService = inject(RefreshService);
   private readonly backend = 'http://localhost:8080';
   rows = signal<Contribution[]>([]);
   search = '';
   private datePipe = new DatePipe('en-IN');
+
+  constructor() {
+    this.refreshService.refresh$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.load();
+    });
+  }
 
   ngOnInit() {
     this.load();

@@ -6,6 +6,9 @@ import { Expense } from '../../core/models/api-models';
 import { expenseReport } from '../../committee/expenses/expenses-report';
 import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
 
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RefreshService } from '../../core/services/refresh.service';
+
 @Component({
   selector: 'app-public-expenses',
   imports: [CurrencyPipe, DatePipe, FormsModule],
@@ -71,9 +74,16 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
 })
 export class PublicExpenses implements OnInit {
   private api = inject(ApiService);
+  private refreshService = inject(RefreshService);
   rows = signal<Expense[]>([]);
   search = '';
   private datePipe = new DatePipe('en-IN');
+
+  constructor() {
+    this.refreshService.refresh$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.load();
+    });
+  }
 
   ngOnInit() {
     this.load();

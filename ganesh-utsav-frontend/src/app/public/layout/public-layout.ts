@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RefreshService } from '../../core/services/refresh.service';
 
 @Component({
   selector: 'app-public-layout',
@@ -18,7 +19,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
           <button
             type="button"
             class="nav-refresh-btn mobile-header-refresh"
-            (click)="refreshPage()"
+            [class.is-refreshing]="refreshService.isRefreshing()"
+            (click)="refreshData()"
             title="Refresh Data"
             aria-label="Refresh Data">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -35,7 +37,8 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
           <button
             type="button"
             class="nav-refresh-btn desktop-header-refresh"
-            (click)="refreshPage()"
+            [class.is-refreshing]="refreshService.isRefreshing()"
+            (click)="refreshData()"
             title="Refresh Data"
             aria-label="Refresh Data">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -60,7 +63,9 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   `
 })
 export class PublicLayout {
-  refreshPage() {
-    window.location.reload();
+  refreshService = inject(RefreshService);
+
+  refreshData() {
+    this.refreshService.triggerRefresh();
   }
 }

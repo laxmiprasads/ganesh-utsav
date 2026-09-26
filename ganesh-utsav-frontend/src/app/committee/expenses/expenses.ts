@@ -1,8 +1,10 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { RefreshService } from '../../core/services/refresh.service';
 import { Expense } from '../../core/models/api-models';
 import { expenseReport } from './expenses-report';
 import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
@@ -15,15 +17,15 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
     <section class="editor-grid">
       <form class="panel form-panel" [formGroup]="form" (ngSubmit)="save()">
         <h2>Add Expense</h2>
-        <label>Occasion
+        <label>Occasion <span class="req">*</span>
           <select formControlName="occasion">
             <option value="Ganesh Chaturthi">Ganesh Chaturthi</option>
             <option value="Durga Matha Navaratri">Durga Matha Navaratri</option>
           </select>
         </label>
-        <label>Description <input formControlName="description"></label>
-        <label>Amount <input type="number" formControlName="amount"></label>
-        <label>Date <input type="date" formControlName="expenseDate"></label>
+        <label>Description <span class="req">*</span> <input formControlName="description"></label>
+        <label>Amount <span class="req">*</span> <input type="number" formControlName="amount"></label>
+        <label>Date <span class="req">*</span> <input type="date" formControlName="expenseDate"></label>
         <label>Notes <textarea formControlName="notes"></textarea></label>
         @if (error()) { <div class="state error compact">{{ error() }}</div> }
         <div class="actions"><button class="primary" type="submit" [disabled]="form.invalid || saving()">{{ saving() ? 'Saving...' : 'Save' }}</button><button type="button" (click)="reset()">Clear</button></div>
@@ -82,6 +84,7 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
 export class Expenses implements OnInit {
   private fb = inject(FormBuilder);
   private api = inject(ApiService);
+  private refreshService = inject(RefreshService);
   rows = signal<Expense[]>([]);
   saving = signal(false);
   error = signal('');
@@ -95,6 +98,12 @@ export class Expenses implements OnInit {
     expenseDate: [new Date().toISOString().slice(0, 10), Validators.required],
     notes: ['']
   });
+
+  constructor() {
+    this.refreshService.refresh$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.load();
+    });
+  }
 
   ngOnInit() { this.load(); }
   load() { this.api.expenses({ search: this.search }).subscribe(rows => this.rows.set(rows)); }

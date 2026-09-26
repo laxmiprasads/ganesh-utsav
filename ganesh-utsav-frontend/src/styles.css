@@ -154,6 +154,12 @@ label {
   font-weight: 700;
 }
 
+.req {
+  color: #dc2626;
+  font-weight: 800;
+  margin-left: 2px;
+}
+
 .password-wrapper {
   position: relative;
   display: flex;
@@ -162,29 +168,37 @@ label {
 }
 
 .password-wrapper input {
-  padding-right: 46px;
+  padding-right: 48px;
 }
 
 .password-wrapper .toggle-password {
   position: absolute;
-  right: 6px;
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
-  min-height: 32px;
-  height: 32px;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%) !important;
+  min-height: 34px;
+  height: 34px;
   width: 34px;
   padding: 0;
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transform: none;
   transition: color 0.15s ease, background-color 0.15s ease;
+  z-index: 2;
+  box-shadow: none;
+}
+
+.password-wrapper .toggle-password svg {
+  width: 19px;
+  height: 19px;
+  display: block;
+  overflow: visible;
+  stroke: currentColor;
 }
 
 .password-wrapper .toggle-password:hover {
@@ -194,10 +208,35 @@ label {
 }
 
 .password-wrapper .toggle-password:active {
-  transform: none !important;
+  transform: translateY(-50%) !important;
   background: var(--gold-light);
   color: var(--primary);
   border: none;
+}
+
+.auth-switch-note {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.auth-switch-note .link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  min-height: auto;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 4px;
+}
+
+.auth-switch-note .link-btn:hover {
+  background: none;
+  color: var(--gold);
 }
 
 /* Visibility Utilities */
@@ -323,7 +362,8 @@ label {
   align-items: center;
   gap: 6px;
   padding: 6px 14px;
-  background: #fff8eb;
+  min-height: 36px;
+  background: #fff6e8;
   color: var(--primary);
   border: 1px solid var(--gold-border);
   border-radius: var(--radius-full);
@@ -335,24 +375,73 @@ label {
   flex-shrink: 0;
 }
 
-.nav-refresh-btn:hover {
-  background: var(--primary);
-  color: #ffffff;
-  border-color: var(--primary);
-  box-shadow: 0 2px 8px var(--primary-glow);
-  transform: translateY(-1px);
-}
-
-.nav-refresh-btn:active {
-  transform: translateY(0);
+.nav-refresh-btn span {
+  color: var(--primary);
+  transition: color 0.2s ease;
 }
 
 .nav-refresh-btn svg {
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  stroke: var(--primary);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.2s ease;
 }
 
-.nav-refresh-btn:hover svg {
+.nav-refresh-btn:hover:not(:disabled) {
+  background: #fae6c3 !important;
+  border-color: var(--gold) !important;
+  color: #7b2a14 !important;
+  box-shadow: 0 2px 8px rgba(216, 154, 69, 0.25);
+  transform: translateY(-1px);
+}
+
+.nav-refresh-btn:hover:not(:disabled) span {
+  color: #7b2a14 !important;
+}
+
+.nav-refresh-btn:hover:not(:disabled) svg {
+  stroke: #7b2a14 !important;
   transform: rotate(180deg);
+}
+
+.nav-refresh-btn:active:not(:disabled) {
+  transform: translateY(0);
+  background: #f4d9a6 !important;
+}
+
+.nav-refresh-btn.is-refreshing svg {
+  animation: spinRefresh 0.7s linear infinite !important;
+}
+
+@keyframes spinRefresh {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.sidebar .nav-refresh-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--gold);
+  border: 1px solid rgba(216, 154, 69, 0.4);
+}
+
+.sidebar .nav-refresh-btn span {
+  color: var(--gold);
+}
+
+.sidebar .nav-refresh-btn svg {
+  stroke: var(--gold);
+}
+
+.sidebar .nav-refresh-btn:hover:not(:disabled) {
+  background: var(--gold) !important;
+  color: #1a2c38 !important;
+  border-color: var(--gold) !important;
+}
+
+.sidebar .nav-refresh-btn:hover:not(:disabled) span {
+  color: #1a2c38 !important;
+}
+
+.sidebar .nav-refresh-btn:hover:not(:disabled) svg {
+  stroke: #1a2c38 !important;
 }
 
 .mobile-header-refresh { display: none; }
@@ -1538,7 +1627,7 @@ tr.history-row td {
 }
 
 /* ==========================================================================
-   Footers & Branding (Gen Tech Software solutions)
+   Footers & Branding (Gen Tech Software Solutions)
    ========================================================================== */
 .app-footer {
   margin-top: auto;

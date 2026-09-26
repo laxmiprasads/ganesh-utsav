@@ -1,8 +1,10 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
+import { RefreshService } from '../../core/services/refresh.service';
 import { Auction, PaymentStatus } from '../../core/models/api-models';
 import { auctionReport } from './auctions-report';
 import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
@@ -26,28 +28,28 @@ function notFutureDate(control: AbstractControl): ValidationErrors | null {
     <section class="editor-grid">
       <form class="panel form-panel" [formGroup]="form" (ngSubmit)="save()">
         <h2>{{ editingId() ? 'Edit Auction' : 'Add Auction' }}</h2>
-        <label>Occasion
+        <label>Occasion <span class="req">*</span>
           <select formControlName="occasion">
             <option value="Ganesh Chaturthi">Ganesh Chaturthi</option>
             <option value="Durga Matha Navaratri">Durga Matha Navaratri</option>
           </select>
         </label>
-        <label>Auction Name <input formControlName="auctionName" placeholder="Auction item name"></label>
-        <label>Winner Name <input formControlName="winnerName" placeholder="Winner name"></label>
+        <label>Auction Name <span class="req">*</span> <input formControlName="auctionName" placeholder="Auction item name"></label>
+        <label>Winner Name <span class="req">*</span> <input formControlName="winnerName" placeholder="Winner name"></label>
         <label>Flat Number <input formControlName="flatNumber" placeholder="Flat number (optional)"></label>
-        <label>Winning Amount <input type="number" formControlName="winningAmount"></label>
+        <label>Winning Amount <span class="req">*</span> <input type="number" formControlName="winningAmount"></label>
         <label>Amount Paid <input type="number" formControlName="amountPaid" placeholder="Leave blank when nothing is collected yet"></label> 
         <small>Payment status (auto): <strong class="badge">{{ statusPreview() }}</strong></small>
         @if (paidAmount() > 0) {
-          <label>Payment Method <select formControlName="paymentMethod"><option>CASH</option><option>UPI</option><option>BANK_TRANSFER</option><option>OTHER</option></select></label>
+          <label>Payment Method <span class="req">*</span> <select formControlName="paymentMethod"><option>CASH</option><option>UPI</option><option>BANK_TRANSFER</option><option>OTHER</option></select></label>
           @if (formCashPayment()) {
-            <label>Paid To <input formControlName="paidTo" placeholder="Receiver name"></label>
+            <label>Paid To <span class="req">*</span> <input formControlName="paidTo" placeholder="Receiver name"></label>
           } @else {
             <label>Payment Proof <input type="file" accept="image/*,.heic,.heif" (change)="onProofChange($event)"></label>
             @if (proofName()) { <small>Selected: {{ proofName() }}</small> }
           }
         }
-        <label>Auction Date <input type="date" formControlName="auctionDate" [max]="today"></label>
+        <label>Auction Date <span class="req">*</span> <input type="date" formControlName="auctionDate" [max]="today"></label>
         @if (form.controls.auctionDate.hasError('futureDate')) { <div class="state error compact">Auction date cannot be after today.</div> }
         <label>Notes <textarea formControlName="notes"></textarea></label>
         @if (error()) { <div class="state error compact">{{ error() }}</div> }
@@ -219,16 +221,16 @@ function notFutureDate(control: AbstractControl): ValidationErrors | null {
         </div>
         <p class="list-line"><span>{{ row.auctionName }} · {{ row.winner }}</span><strong>{{ row.winningAmount | currency:'INR':'symbol':'1.0-0':'en-IN' }} won</strong></p>
         <p class="list-line"><span>Amount paid till now</span><strong>{{ row.amountPaid | currency:'INR':'symbol':'1.0-0':'en-IN' }}</strong></p>
-        <label>Amount paying now <input type="number" formControlName="amount" (input)="updatePayRemaining()"></label>
+        <label>Amount paying now <span class="req">*</span> <input type="number" formControlName="amount" (input)="updatePayRemaining()"></label>
         <p class="list-line"><span>Remaining balance after this payment</span><strong>{{ payRemaining() | currency:'INR':'symbol':'1.0-0':'en-IN' }}</strong></p>
-        <label>Payment Method <select formControlName="paymentMethod"><option>CASH</option><option>UPI</option><option>BANK_TRANSFER</option><option>OTHER</option></select></label>
+        <label>Payment Method <span class="req">*</span> <select formControlName="paymentMethod"><option>CASH</option><option>UPI</option><option>BANK_TRANSFER</option><option>OTHER</option></select></label>
         @if (payCashPayment()) {
-          <label>Paid To <input formControlName="paidTo" placeholder="Receiver name"></label>
+          <label>Paid To <span class="req">*</span> <input formControlName="paidTo" placeholder="Receiver name"></label>
         } @else {
           <label>Payment Proof <input type="file" accept="image/*,.heic,.heif" (change)="onPayProofChange($event)"></label>
           @if (payProofName()) { <small>Selected: {{ payProofName() }}</small> }
         }
-        <label>Payment Date <input type="date" formControlName="paymentDate" [max]="today"></label>
+        <label>Payment Date <span class="req">*</span> <input type="date" formControlName="paymentDate" [max]="today"></label>
         <label>Notes <textarea formControlName="notes"></textarea></label>
         @if (payError()) { <div class="state error compact">{{ payError() }}</div> }
         <div class="actions"><button class="primary" type="submit" [disabled]="payUploading()">{{ payUploading() ? 'Saving...' : 'Update' }}</button><button type="button" (click)="closePay()">Cancel</button></div>
@@ -239,6 +241,7 @@ function notFutureDate(control: AbstractControl): ValidationErrors | null {
 export class Auctions implements OnInit {
   private fb = inject(FormBuilder);
   private api = inject(ApiService);
+  private refreshService = inject(RefreshService);
   rows = signal<Auction[]>([]);
   editingId = signal<number | undefined>(undefined);
   statusPreview = signal<PaymentStatus>('PENDING');
@@ -284,6 +287,13 @@ export class Auctions implements OnInit {
     paymentDate: [new Date().toISOString().slice(0, 10), [Validators.required, notFutureDate]],
     notes: ['']
   });
+
+  constructor() {
+    this.refreshService.refresh$.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.load();
+    });
+  }
+
   ngOnInit() {
     this.refreshStatus();
     this.form.valueChanges.subscribe(() => {

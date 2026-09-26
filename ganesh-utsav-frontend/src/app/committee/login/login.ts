@@ -8,12 +8,12 @@ import { AuthService } from '../../core/services/auth.service';
   imports: [ReactiveFormsModule, RouterLink],
   template: `
     <main class="login-page">
-      <div class="auth-wrapper" [class.single]="!allowSignup">
+      <div class="auth-wrapper" [class.single]="!showSignupForm()">
         <div class="auth-topbar">
           <a routerLink="/" class="back-link">← Back to Public Portal</a>
         </div>
 
-        <div class="auth-grid" [class.dual]="allowSignup" [class.single]="!allowSignup">
+        <div class="auth-grid" [class.dual]="showSignupForm()" [class.single]="!showSignupForm()">
           <!-- Sign In Card -->
           <form class="auth-card" [formGroup]="loginForm" (ngSubmit)="submitLogin()">
             <div class="card-header-group">
@@ -21,6 +21,10 @@ import { AuthService } from '../../core/services/auth.service';
               <h1>Sign In</h1>
               <p class="subtext">Sign in with your credentials to manage festival activities.</p>
             </div>
+
+            @if (loginSuccess()) {
+              <div class="state success compact">{{ loginSuccess() }}</div>
+            }
 
             <label>
               Username
@@ -42,13 +46,15 @@ import { AuthService } from '../../core/services/auth.service';
                   [attr.aria-label]="showLoginPassword() ? 'Hide password' : 'Show password'"
                   [title]="showLoginPassword() ? 'Hide password' : 'Show password'">
                   @if (showLoginPassword()) {
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                      <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+                      <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                      <line x1="2" x2="22" y1="2" y2="22"></line>
                     </svg>
                   } @else {
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
                       <circle cx="12" cy="12" r="3"></circle>
                     </svg>
                   }
@@ -63,10 +69,17 @@ import { AuthService } from '../../core/services/auth.service';
             <button class="primary" type="submit" [disabled]="loginForm.invalid || loginLoading()">
               {{ loginLoading() ? 'Signing in...' : 'Sign In to Committee' }}
             </button>
+
+            @if (allowSignup && !showSignupForm()) {
+              <p class="auth-switch-note">
+                Need to add a member?
+                <button type="button" class="link-btn" (click)="showSignupForm.set(true)">Register here</button>
+              </p>
+            }
           </form>
 
-          <!-- Sign Up Card (Controlled strictly by code flag allowSignup) -->
-          @if (allowSignup) {
+          <!-- Sign Up Card -->
+          @if (allowSignup && showSignupForm()) {
             <form class="auth-card signup-card" [formGroup]="signupForm" (ngSubmit)="submitSignup()">
               <div class="card-header-group">
                 <p class="eyebrow" style="color: var(--gold);">New Registration</p>
@@ -74,10 +87,8 @@ import { AuthService } from '../../core/services/auth.service';
                 <p class="subtext">Create an account for a new committee member to access the admin portal.</p>
               </div>
 
-              @if (signupSuccess()) {
-                <div class="state success">
-                  {{ signupSuccess() }}
-                </div>
+              @if (signupError()) {
+                <div class="state error compact">{{ signupError() }}</div>
               }
 
               <label>
@@ -100,13 +111,15 @@ import { AuthService } from '../../core/services/auth.service';
                     [attr.aria-label]="showSignupPassword() ? 'Hide password' : 'Show password'"
                     [title]="showSignupPassword() ? 'Hide password' : 'Show password'">
                     @if (showSignupPassword()) {
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                        <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+                        <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                        <line x1="2" x2="22" y1="2" y2="22"></line>
                       </svg>
                     } @else {
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                       </svg>
                     }
@@ -129,13 +142,15 @@ import { AuthService } from '../../core/services/auth.service';
                     [attr.aria-label]="showSignupConfirmPassword() ? 'Hide password' : 'Show password'"
                     [title]="showSignupConfirmPassword() ? 'Hide password' : 'Show password'">
                     @if (showSignupConfirmPassword()) {
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                        <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+                        <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                        <line x1="2" x2="22" y1="2" y2="22"></line>
                       </svg>
                     } @else {
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z"></path>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                       </svg>
                     }
@@ -143,13 +158,14 @@ import { AuthService } from '../../core/services/auth.service';
                 </div>
               </label>
 
-              @if (signupError()) {
-                <div class="state error compact">{{ signupError() }}</div>
-              }
-
               <button class="primary" type="submit" [disabled]="signupForm.invalid || signupLoading()">
                 {{ signupLoading() ? 'Registering...' : 'Register Committee Account' }}
               </button>
+
+              <p class="auth-switch-note">
+                Already registered?
+                <button type="button" class="link-btn" (click)="showSignupForm.set(false)">Back to Sign In</button>
+              </p>
             </form>
           }
         </div>
@@ -164,10 +180,10 @@ export class Login {
 
   /**
    * CODE-LEVEL FLAG:
-   * Set `allowSignup = true` to enable and display the Sign Up form beside the Sign In form.
-   * Set `allowSignup = false` to hide and completely disable the Sign Up form from the UI.
+   * Set `allowSignup = true` to allow new committee member registration.
    */
   readonly allowSignup: boolean = true;
+  showSignupForm = signal(true);
 
   // Visibility states for password fields
   showLoginPassword = signal(false);
@@ -177,6 +193,7 @@ export class Login {
   // Login form state
   loginLoading = signal(false);
   loginError = signal('');
+  loginSuccess = signal('');
   loginForm = this.fb.nonNullable.group({
     username: ['', Validators.required],
     password: ['', Validators.required]
@@ -185,7 +202,6 @@ export class Login {
   // Sign Up form state
   signupLoading = signal(false);
   signupError = signal('');
-  signupSuccess = signal('');
   signupForm = this.fb.nonNullable.group({
     username: ['', [Validators.required, Validators.minLength(3)]],
     password: ['', [Validators.required, Validators.minLength(6)]],
@@ -228,14 +244,15 @@ export class Login {
 
     this.signupLoading.set(true);
     this.signupError.set('');
-    this.signupSuccess.set('');
 
     this.auth.register(username.trim(), password).subscribe({
       next: (res) => {
         this.signupLoading.set(false);
-        this.signupSuccess.set(res?.message || 'Registration successful! You can now sign in.');
+        this.loginSuccess.set(res?.message || `Account created successfully for '${username.trim()}'. You can now sign in.`);
         this.loginForm.patchValue({ username: username.trim(), password: '' });
         this.signupForm.reset();
+        // Hide the sign up form and show only the sign in form
+        this.showSignupForm.set(false);
       },
       error: (err) => {
         this.signupLoading.set(false);
