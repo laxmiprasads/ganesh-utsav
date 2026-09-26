@@ -9,8 +9,21 @@ import { AuthService } from '../../core/services/auth.service';
     <div class="admin-layout">
       <aside class="sidebar">
         <div class="admin-brand">
-          <span class="brand-mark dark">GU</span>
-          <strong>Committee</strong>
+          <div class="admin-brand-left">
+            <span class="brand-mark dark">GU</span>
+            <strong>Committee</strong>
+          </div>
+          <button
+            type="button"
+            class="nav-refresh-btn mobile-sidebar-refresh"
+            (click)="refreshPage()"
+            title="Refresh Data"
+            aria-label="Refresh Data">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            <span>Refresh</span>
+          </button>
         </div>
         <nav>
           <a routerLink="/committee/dashboard" routerLinkActive="active">Dashboard</a>
@@ -22,17 +35,44 @@ import { AuthService } from '../../core/services/auth.service';
       </aside>
       <section class="admin-main">
         <header class="admin-topbar">
-          <div>
+          <div class="admin-topbar-info">
             <strong>Ganesh Utsav Management System 2026</strong>
             <small>Signed in as {{ auth.username() }}</small>
           </div>
-          <a routerLink="/">Public View</a>
+          <div class="admin-topbar-actions">
+            <button
+              type="button"
+              class="nav-refresh-btn desktop-topbar-refresh"
+              (click)="refreshPage()"
+              title="Refresh Data"
+              aria-label="Refresh Data">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+              </svg>
+              <span>Refresh</span>
+            </button>
+            <a routerLink="/" class="public-view-link">Public View</a>
+          </div>
         </header>
-        <router-outlet></router-outlet>
+        <div class="admin-content">
+          <router-outlet></router-outlet>
+        </div>
+        <footer class="admin-footer">
+          <div class="footer-container">
+            <p class="footer-copy">© 2026 Ganesh Utsav Management System</p>
+            <p class="footer-dev">
+              Powered & Developed by <strong class="company-name">Gen Tech Software solutions</strong>
+            </p>
+          </div>
+        </footer>
       </section>
     </div>
   `
 })
 export class CommitteeLayout {
   constructor(public auth: AuthService) {}
+
+  refreshPage() {
+    window.location.reload();
+  }
 }

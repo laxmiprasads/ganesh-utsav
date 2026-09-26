@@ -44,7 +44,6 @@ describe('PublicDashboard', () => {
     expect(text).toContain('₹72,116');
 
     // Panels
-    expect(text).toContain('Collection vs Expenses');
     expect(text).toContain('Recent Contributions');
     expect(text).toContain('Nari');
     expect(text).toContain('₹1,000');

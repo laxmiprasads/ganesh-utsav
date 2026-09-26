@@ -214,6 +214,12 @@ label {
 /* ==========================================================================
    Public Header & Navigation
    ========================================================================== */
+.public-app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .public-header {
   position: sticky;
   top: 0;
@@ -230,7 +236,20 @@ label {
   box-shadow: var(--shadow-sm);
 }
 
+.public-header-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .brand, .admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-brand-left {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -298,10 +317,54 @@ label {
   box-shadow: 0 3px 10px var(--primary-glow);
 }
 
+/* Refresh Button in Nav / Topbars */
+.nav-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: #fff8eb;
+  color: var(--primary);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav-refresh-btn:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 2px 8px var(--primary-glow);
+  transform: translateY(-1px);
+}
+
+.nav-refresh-btn:active {
+  transform: translateY(0);
+}
+
+.nav-refresh-btn svg {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-refresh-btn:hover svg {
+  transform: rotate(180deg);
+}
+
+.mobile-header-refresh { display: none; }
+.desktop-header-refresh { display: inline-flex; }
+.mobile-sidebar-refresh { display: none; }
+.desktop-topbar-refresh { display: inline-flex; }
+
 .public-shell {
   width: min(1200px, 100%);
   margin: 0 auto;
   padding: 24px clamp(14px, 3vw, 36px) 60px;
+  flex: 1;
 }
 
 /* ==========================================================================
@@ -1249,6 +1312,13 @@ tr.history-row td {
 .admin-main {
   min-width: 0;
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.admin-content {
+  flex: 1;
 }
 
 .admin-topbar {
@@ -1264,7 +1334,13 @@ tr.history-row td {
   box-shadow: var(--shadow-sm);
 }
 
-.admin-topbar a {
+.admin-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-topbar a, .public-view-link {
   color: var(--primary);
   font-weight: 800;
   font-size: 14px;
@@ -1462,6 +1538,59 @@ tr.history-row td {
 }
 
 /* ==========================================================================
+   Footers & Branding (Gen Tech Software solutions)
+   ========================================================================== */
+.app-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border-color);
+  background: #ffffff;
+  padding: 22px clamp(16px, 3vw, 40px);
+}
+
+.admin-footer {
+  margin-top: auto;
+  padding: 22px 14px 8px;
+  border-top: 1px solid #e1e5e8;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.footer-copy {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.footer-dev {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.company-name {
+  color: var(--primary);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 769px) {
+  .footer-container {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
    Mobile Breakpoints & Refinements (< 768px)
    ========================================================================== */
 @media (max-width: 768px) {
@@ -1472,6 +1601,14 @@ tr.history-row td {
     gap: 12px;
     padding: 12px 14px;
   }
+
+  .public-header-brand-row {
+    width: 100%;
+  }
+
+  .mobile-header-refresh { display: inline-flex; }
+  .desktop-header-refresh { display: none; }
+  .mobile-sidebar-refresh { display: inline-flex; }
 
   .public-header .brand {
     justify-content: flex-start;
@@ -1516,24 +1653,36 @@ tr.history-row td {
     font-size: 24px;
   }
 
-  /* Stat Grid */
+  /* Stat Grid: strictly 2 cards per row on mobile */
   .stat-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 10px;
   }
 
   .stat-card {
-    padding: 14px;
-    min-height: 96px;
+    padding: 12px 10px;
+    min-height: auto;
   }
 
   .stat-card span {
-    font-size: 12px;
+    font-size: 11px;
+    line-height: 1.2;
   }
 
   .stat-card strong {
-    font-size: 20px;
+    font-size: clamp(16px, 4.5vw, 20px);
     margin-top: 6px;
+    word-break: break-word;
+  }
+
+  .stat-card small {
+    font-size: 11px;
+    margin-top: 4px;
+  }
+
+  /* Last odd card (e.g. 5th card: Balance) spans nicely across both columns on 2-col mobile */
+  .stat-card:last-child:nth-child(odd) {
+    grid-column: span 2;
   }
 
   /* Grids Stack */
@@ -1734,8 +1883,18 @@ tr.history-row td {
 
 /* Extra small devices (<= 390px) */
 @media (max-width: 390px) {
+  /* Keep 2 cards per row even on extra small screens */
   .stat-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px;
+  }
+
+  .stat-card {
+    padding: 10px 8px;
+  }
+
+  .stat-card strong {
+    font-size: 16px;
   }
 
   .auction-metrics-grid {

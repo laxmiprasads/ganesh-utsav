@@ -167,7 +167,7 @@ export class Login {
    * Set `allowSignup = true` to enable and display the Sign Up form beside the Sign In form.
    * Set `allowSignup = false` to hide and completely disable the Sign Up form from the UI.
    */
-  readonly allowSignup: boolean = false;
+  readonly allowSignup: boolean = true;
 
   // Visibility states for password fields
   showLoginPassword = signal(false);
