@@ -17,14 +17,14 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
     <section class="editor-grid">
       <form class="panel form-panel" [formGroup]="form" (ngSubmit)="save()">
         <h2>Add Contribution</h2>
-        <label>Contributor Name <span class="req">*</span> <input formControlName="contributorName" placeholder="Contributor name"></label>
-        <label>Flat Number <input formControlName="flatNumber" placeholder="Flat number (optional)"></label>
-        <label>Occasion <span class="req">*</span> <select formControlName="occasion"><option value="Ganesh Chaturthi">Ganesh Chaturthi</option><option value="Durga Matha Navaratri">Durga Matha Navaratri</option></select></label>
-        <label>Amount <span class="req">*</span> <input type="number" formControlName="amount"></label>
-        <label>Payment Method <span class="req">*</span> <select formControlName="paymentMethod" (ngModelChange)="onMethodChange($event)"><option>CASH</option><option>UPI</option><option>BANK_TRANSFER</option><option>OTHER</option></select></label>
-        <label>Paid To <span class="req">*</span> <input formControlName="paidTo" placeholder="Receiver name"></label>
-        <label>Payment Date <span class="req">*</span> <input type="date" formControlName="paymentDate"></label>
-        <label>Notes <textarea formControlName="notes"></textarea></label>
+        <label><span>Contributor Name <span class="req">*</span></span> <input formControlName="contributorName" placeholder="Contributor name"></label>
+        <label><span>Flat Number</span> <input formControlName="flatNumber" placeholder="Flat number (optional)"></label>
+        <label><span>Occasion <span class="req">*</span></span> <select formControlName="occasion"><option value="Ganesh Chaturthi">Ganesh Chaturthi</option><option value="Durga Matha Navaratri">Durga Matha Navaratri</option></select></label>
+        <label><span>Amount <span class="req">*</span></span> <input type="number" formControlName="amount"></label>
+        <label><span>Payment Method <span class="req">*</span></span> <select formControlName="paymentMethod" (ngModelChange)="onMethodChange($event)"><option>CASH</option><option>UPI</option><option>BANK_TRANSFER</option><option>OTHER</option></select></label>
+        <label><span>Paid To <span class="req">*</span></span> <input formControlName="paidTo" placeholder="Receiver name"></label>
+        <label><span>Payment Date <span class="req">*</span></span> <input type="date" formControlName="paymentDate"></label>
+        <label><span>Notes</span> <textarea formControlName="notes"></textarea></label>
         @if (error()) { <div class="state error compact">{{ error() }}</div> }
         <div class="actions"><button class="primary" type="submit" [disabled]="form.invalid || saving()">{{ saving() ? 'Saving...' : 'Save' }}</button><button type="button" (click)="reset()">Clear</button></div>
       </form>

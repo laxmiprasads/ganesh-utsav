@@ -1,10 +1,11 @@
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { ApiService } from '../../core/services/api.service';
 import { DashboardStats } from '../../core/models/api-models';
-
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RefreshService } from '../../core/services/refresh.service';
+import { dashboardReport } from '../../core/utils/dashboard-report';
+import { downloadPdfReport } from '../../core/utils/pdf-report';
 
 type StatCard = { label: string; value: number; note?: string; noteValue?: number };
 
@@ -13,10 +14,13 @@ type StatCard = { label: string; value: number; note?: string; noteValue?: numbe
   imports: [CurrencyPipe],
   template: `
     <section class="page-heading festive">
-      <div>
-        <p class="eyebrow">Ganesh Utsav Management System 2026</p>
+      <div class="heading-content">
+        <p class="eyebrow">Alkapuri Ganesh Utsav Committee</p>
         <h1>Public Financial Dashboard</h1>
         <p>Transparent collections, expenses, balances, and auction results for colony residents.</p>
+      </div>
+      <div class="heading-actions">
+        <button type="button" (click)="downloadReport()" [disabled]="!stats()">Download Report</button>
       </div>
     </section>
 
@@ -102,6 +106,8 @@ export class PublicDashboard implements OnInit {
     });
   }
 
+  private datePipe = new DatePipe('en-IN');
+
   cards(): StatCard[] {
     const s = this.stats();
     if (!s) return [];
@@ -112,6 +118,16 @@ export class PublicDashboard implements OnInit {
       { label: 'Total Expenses', value: s.expenseTotal },
       { label: 'Balance', value: s.balance }
     ];
+  }
+
+  downloadReport() {
+    const s = this.stats();
+    if (!s) return;
+    const generated = new Date();
+    downloadPdfReport(`dashboard-report-${generated.toISOString().slice(0, 10)}.pdf`, dashboardReport(s, {
+      generated,
+      formatDate: (value, format) => this.datePipe.transform(value, format) ?? ''
+    }));
   }
 }
 

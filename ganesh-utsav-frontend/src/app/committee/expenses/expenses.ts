@@ -17,16 +17,16 @@ import { PdfReport, downloadPdfReport } from '../../core/utils/pdf-report';
     <section class="editor-grid">
       <form class="panel form-panel" [formGroup]="form" (ngSubmit)="save()">
         <h2>Add Expense</h2>
-        <label>Occasion <span class="req">*</span>
+        <label><span>Occasion <span class="req">*</span></span>
           <select formControlName="occasion">
             <option value="Ganesh Chaturthi">Ganesh Chaturthi</option>
             <option value="Durga Matha Navaratri">Durga Matha Navaratri</option>
           </select>
         </label>
-        <label>Description <span class="req">*</span> <input formControlName="description"></label>
-        <label>Amount <span class="req">*</span> <input type="number" formControlName="amount"></label>
-        <label>Date <span class="req">*</span> <input type="date" formControlName="expenseDate"></label>
-        <label>Notes <textarea formControlName="notes"></textarea></label>
+        <label><span>Description <span class="req">*</span></span> <input formControlName="description"></label>
+        <label><span>Amount <span class="req">*</span></span> <input type="number" formControlName="amount"></label>
+        <label><span>Date <span class="req">*</span></span> <input type="date" formControlName="expenseDate"></label>
+        <label><span>Notes</span> <textarea formControlName="notes"></textarea></label>
         @if (error()) { <div class="state error compact">{{ error() }}</div> }
         <div class="actions"><button class="primary" type="submit" [disabled]="form.invalid || saving()">{{ saving() ? 'Saving...' : 'Save' }}</button><button type="button" (click)="reset()">Clear</button></div>
       </form>

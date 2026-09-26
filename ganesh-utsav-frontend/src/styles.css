@@ -154,9 +154,21 @@ label {
   font-weight: 700;
 }
 
+label > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
 .req {
   color: #dc2626;
   font-weight: 800;
+  font-size: 14px;
+  line-height: 1;
+  display: inline-block;
   margin-left: 2px;
 }
 
@@ -294,23 +306,20 @@ label {
   gap: 12px;
 }
 
-.brand-mark {
-  display: grid;
-  place-items: center;
+.brand-logo {
   width: 44px;
   height: 44px;
-  border-radius: var(--radius-md);
-  background: linear-gradient(135deg, #f0b44f, #d89a45);
-  color: #3e190d;
-  font-weight: 900;
-  font-size: 16px;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 10px rgba(216, 154, 69, 0.35);
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   flex-shrink: 0;
+  display: block;
 }
 
-.brand-mark.dark {
-  background: linear-gradient(135deg, #f0b44f, #d89a45);
+.brand-logo.admin {
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
 }
 
 .brand strong {
@@ -461,6 +470,28 @@ label {
    ========================================================================== */
 .page-heading, .admin-heading {
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.heading-content {
+  flex: 1 1 300px;
+}
+
+.heading-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.heading-actions button {
+  white-space: nowrap;
 }
 
 .page-heading.festive {
@@ -948,18 +979,19 @@ tr.history-row td {
 /* Contribution Card */
 .data-card.contribution-card {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
 }
 
 .card-avatar {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, #fff1de, #ffe2bd);
   color: var(--primary);
   font-weight: 800;
-  font-size: 17px;
+  font-size: 16px;
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -975,24 +1007,24 @@ tr.history-row td {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 }
 
 .contributor-title-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
   min-width: 0;
+  flex: 1;
 }
 
 .card-title-row strong {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  word-break: break-word;
+  line-height: 1.3;
 }
 
 .recorded-by-tag {
@@ -1001,7 +1033,7 @@ tr.history-row td {
   color: var(--text-secondary);
   background: var(--bg-main);
   border: 1px solid var(--border-color);
-  padding: 1px 8px;
+  padding: 1px 7px;
   border-radius: var(--radius-full);
   display: inline-flex;
   align-items: center;
@@ -1025,7 +1057,7 @@ tr.history-row td {
 }
 
 .card-amount {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 800;
   color: var(--success);
   white-space: nowrap;
@@ -1039,10 +1071,16 @@ tr.history-row td {
 .card-meta {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 4px;
-  font-size: 13px;
-  color: var(--text-muted);
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.card-meta > span {
+  white-space: nowrap;
 }
 
 /* Expense Card */
@@ -1627,7 +1665,7 @@ tr.history-row td {
 }
 
 /* ==========================================================================
-   Footers & Branding (Gen Tech Software Solutions)
+   Footers & Branding (Gen-Tech Software Solutions)
    ========================================================================== */
 .app-footer {
   margin-top: auto;
@@ -1703,6 +1741,11 @@ tr.history-row td {
     justify-content: flex-start;
   }
 
+  .brand-logo {
+    width: 38px;
+    height: 38px;
+  }
+
   .public-header nav {
     width: 100%;
     display: flex;
@@ -1731,15 +1774,25 @@ tr.history-row td {
   }
 
   .public-shell {
-    padding: 16px 14px 48px;
+    padding: 12px 10px 48px;
+  }
+
+  .page-heading, .admin-heading {
+    gap: 12px;
   }
 
   .page-heading.festive {
-    padding: 20px 16px;
+    padding: 18px 14px;
+    gap: 12px;
   }
 
   .page-heading h1, .admin-heading h1 {
-    font-size: 24px;
+    font-size: 22px;
+    margin: 4px 0 6px;
+  }
+
+  .page-heading p, .admin-heading p {
+    font-size: 13px;
   }
 
   /* Stat Grid: strictly 2 cards per row on mobile */
@@ -1781,7 +1834,51 @@ tr.history-row td {
   }
 
   .panel {
-    padding: 16px;
+    padding: 12px 10px;
+  }
+
+  .data-card {
+    padding: 12px;
+  }
+
+  .data-card.contribution-card {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .card-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .card-title-row strong {
+    font-size: 14px;
+  }
+
+  .card-amount {
+    font-size: 15px;
+  }
+
+  .card-meta {
+    font-size: 11.5px;
+    gap: 4px 6px;
+  }
+
+  .badge.occasion-badge {
+    font-size: 10.5px;
+    padding: 1px 6px;
+    min-height: 18px;
+  }
+
+  .badge.method-cash,
+  .badge.method-upi,
+  .badge.method-bank_transfer,
+  .badge.method-bank-transfer,
+  .badge.method-other {
+    font-size: 10.5px;
+    padding: 1px 6px;
+    min-height: 18px;
   }
 
   .bar-row {
@@ -1798,12 +1895,15 @@ tr.history-row td {
   .toolbar {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 8px;
+    margin-bottom: 12px;
   }
 
   .toolbar input, .toolbar select, .toolbar button {
     max-width: none;
     width: 100%;
+    min-height: 40px;
+    font-size: 14px;
   }
 
   .date-filter-group {

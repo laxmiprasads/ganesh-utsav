@@ -19,8 +19,8 @@ export function expenseReport(rows: Expense[], context: ExpenseReportContext): P
   const total = rows.reduce((sum, row) => sum + Number(row.amount || 0), 0);
 
   return {
-    title: 'Expenses Report',
-    subtitle: 'Ganesh Utsav Management System 2026',
+    title: 'Alkapuri Ganesh Utsav Committee',
+    subtitle: 'Expenses Report',
     meta: [
       `Generated on ${context.formatDate(generated, 'dd/MM/yyyy, hh:mm a')}`,
       search ? `${rows.length} expense(s) matching "${search}"` : `${rows.length} expense(s)`

@@ -10,9 +10,9 @@ import { RefreshService } from '../../core/services/refresh.service';
       <header class="public-header">
         <div class="public-header-brand-row">
           <a class="brand" routerLink="/">
-            <span class="brand-mark">GU</span>
+            <img src="/logo-user.png" alt="Alkapuri Ganesh Utsav Committee Logo" class="brand-logo">
             <span>
-              <strong>Ganesh Utsav 2026</strong>
+              <strong>Alkapuri Ganesh Utsav Committee</strong>
               <small>Financial Transparency Portal</small>
             </span>
           </a>
@@ -55,7 +55,7 @@ import { RefreshService } from '../../core/services/refresh.service';
         <div class="footer-container">
           <p class="footer-copy">© 2026 Ganesh Utsav Committee. All rights reserved.</p>
           <p class="footer-dev">
-            Powered & Developed by <strong class="company-name">Gen Tech Software solutions</strong>
+            Powered & Developed by <strong class="company-name">Gen-Tech Software Solutions</strong>
           </p>
         </div>
       </footer>

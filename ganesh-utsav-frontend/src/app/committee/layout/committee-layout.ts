@@ -11,7 +11,7 @@ import { RefreshService } from '../../core/services/refresh.service';
       <aside class="sidebar">
         <div class="admin-brand">
           <div class="admin-brand-left">
-            <span class="brand-mark dark">GU</span>
+            <img src="/logo-admin.png" alt="Committee Logo" class="brand-logo admin">
             <strong>Committee</strong>
           </div>
           <button
@@ -64,7 +64,7 @@ import { RefreshService } from '../../core/services/refresh.service';
           <div class="footer-container">
             <p class="footer-copy">© 2026 Ganesh Utsav Management System</p>
             <p class="footer-dev">
-              Powered & Developed by <strong class="company-name">Gen Tech Software solutions</strong>
+              Powered & Developed by <strong class="company-name">Gen-Tech Software Solutions</strong>
             </p>
           </div>
         </footer>

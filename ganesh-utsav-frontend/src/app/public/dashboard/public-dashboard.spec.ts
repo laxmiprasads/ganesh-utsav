@@ -55,6 +55,11 @@ describe('PublicDashboard', () => {
     expect(text).toContain('Anitha');
     expect(text).toContain('PARTIAL');
     expect(text).toContain('of ₹30,000 · ₹20,000 pending');
+
+    const downloadBtn = fixture.nativeElement.querySelector('.heading-actions button') as HTMLButtonElement;
+    expect(downloadBtn).toBeTruthy();
+    expect(downloadBtn.textContent).toContain('Download Report');
+    expect(downloadBtn.disabled).toBe(false);
   });
 
   function mockStats(): DashboardStats {

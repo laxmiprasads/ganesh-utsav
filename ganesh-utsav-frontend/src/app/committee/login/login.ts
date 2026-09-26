@@ -8,12 +8,12 @@ import { AuthService } from '../../core/services/auth.service';
   imports: [ReactiveFormsModule, RouterLink],
   template: `
     <main class="login-page">
-      <div class="auth-wrapper" [class.single]="!showSignupForm()">
+      <div class="auth-wrapper" [class.single]="!allowSignup || !showSignupForm()">
         <div class="auth-topbar">
           <a routerLink="/" class="back-link">← Back to Public Portal</a>
         </div>
 
-        <div class="auth-grid" [class.dual]="showSignupForm()" [class.single]="!showSignupForm()">
+        <div class="auth-grid" [class.dual]="allowSignup && showSignupForm()" [class.single]="!allowSignup || !showSignupForm()">
           <!-- Sign In Card -->
           <form class="auth-card" [formGroup]="loginForm" (ngSubmit)="submitLogin()">
             <div class="card-header-group">
@@ -182,8 +182,8 @@ export class Login {
    * CODE-LEVEL FLAG:
    * Set `allowSignup = true` to allow new committee member registration.
    */
-  readonly allowSignup: boolean = true;
-  showSignupForm = signal(true);
+  readonly allowSignup: boolean = false;
+  showSignupForm = signal(false);
 
   // Visibility states for password fields
   showLoginPassword = signal(false);

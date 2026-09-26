@@ -14,7 +14,8 @@ describe('expenseReport', () => {
   it('prints date, description, and amount for every expense', () => {
     const report = expenseReport([sampleExpense()], context);
 
-    expect(report.title).toBe('Expenses Report');
+    expect(report.title).toBe('Alkapuri Ganesh Utsav Committee');
+    expect(report.subtitle).toBe('Expenses Report');
     expect(report.columns.map(c => c.header)).toEqual(['Date', 'Description', 'Amount']);
     expect(report.rows.length).toBe(1);
     expect(report.rows[0].cells).toEqual(['21/09/2026', 'Tent Decoration', 'Rs.5,000']);
@@ -25,6 +26,7 @@ describe('expenseReport', () => {
   it('generates a valid PDF text stream', () => {
     const text = Array.from(buildPdfReport(expenseReport([sampleExpense()], context)), byte => String.fromCharCode(byte)).join('');
     expect(text.startsWith('%PDF-1.4')).toBe(true);
+    expect(text).toContain('(Alkapuri Ganesh Utsav Committee) Tj');
     expect(text).toContain('(Expenses Report) Tj');
     expect(text).toContain('(21/09/2026) Tj');
     expect(text).toContain('(Tent Decoration) Tj');

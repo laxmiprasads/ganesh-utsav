@@ -1,9 +1,11 @@
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ApiService } from '../../core/services/api.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { DashboardStats } from '../../core/models/api-models';
+import { dashboardReport } from '../../core/utils/dashboard-report';
+import { downloadPdfReport } from '../../core/utils/pdf-report';
 
 type StatCard = { label: string; value: number; note?: string; noteValue?: number };
 
@@ -12,9 +14,12 @@ type StatCard = { label: string; value: number; note?: string; noteValue?: numbe
   imports: [CurrencyPipe],
   template: `
     <section class="admin-heading">
-      <div>
+      <div class="heading-content">
         <p class="eyebrow">Committee Dashboard</p>
         <h1>Financial Control Center</h1>
+      </div>
+      <div class="heading-actions">
+        <button type="button" (click)="downloadReport()" [disabled]="!stats()">Download Report</button>
       </div>
     </section>
     @if (stats()) {
@@ -91,6 +96,8 @@ export class CommitteeDashboard implements OnInit {
     this.api.committeeDashboard().subscribe(stats => this.stats.set(stats));
   }
 
+  private datePipe = new DatePipe('en-IN');
+
   cards(): StatCard[] {
     const s = this.stats();
     if (!s) return [];
@@ -101,5 +108,15 @@ export class CommitteeDashboard implements OnInit {
       { label: 'Total Expenses', value: s.expenseTotal },
       { label: 'Balance', value: s.balance }
     ];
+  }
+
+  downloadReport() {
+    const s = this.stats();
+    if (!s) return;
+    const generated = new Date();
+    downloadPdfReport(`dashboard-report-${generated.toISOString().slice(0, 10)}.pdf`, dashboardReport(s, {
+      generated,
+      formatDate: (value, format) => this.datePipe.transform(value, format) ?? ''
+    }));
   }
 }

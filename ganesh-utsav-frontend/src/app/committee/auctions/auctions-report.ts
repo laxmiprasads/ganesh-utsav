@@ -24,8 +24,8 @@ export function auctionReport(rows: Auction[], context: AuctionReportContext): P
   const totalBalance = rows.reduce((sum, row) => sum + Number(row.balance || 0), 0);
 
   return {
-    title: 'Auctions Report',
-    subtitle: 'Ganesh Utsav Management System 2026',
+    title: 'Alkapuri Ganesh Utsav Committee',
+    subtitle: 'Auctions Report',
     meta: [
       `Generated on ${context.formatDate(generated, 'dd/MM/yyyy, hh:mm a')}`,
       search ? `${rows.length} auction(s) matching "${search}"` : `${rows.length} auction(s)`

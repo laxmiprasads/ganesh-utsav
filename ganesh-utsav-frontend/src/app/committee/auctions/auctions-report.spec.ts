@@ -25,7 +25,8 @@ describe('auctionReport', () => {
   it('prints auction columns, amounts and highlights', () => {
     const report = auctionReport([sampleAuction()], context);
 
-    expect(report.title).toBe('Auctions Report');
+    expect(report.title).toBe('Alkapuri Ganesh Utsav Committee');
+    expect(report.subtitle).toBe('Auctions Report');
     expect(report.columns.map(c => c.header)).toEqual(['Date', 'Auction', 'Winner', 'Winning Bid', 'Paid', 'Balance']);
     expect(report.rows.length).toBe(1);
     expect(report.rows[0].cells).toEqual(['22/09/2026', 'Big laddu', 'Surendra (A-102)', 'Rs.50,000', 'Rs.30,000', 'Rs.20,000']);
@@ -40,6 +41,7 @@ describe('auctionReport', () => {
   it('generates a valid PDF text stream without truncating date or amounts', () => {
     const text = Array.from(buildPdfReport(auctionReport([sampleAuction()], context)), byte => String.fromCharCode(byte)).join('');
     expect(text.startsWith('%PDF-1.4')).toBe(true);
+    expect(text).toContain('(Alkapuri Ganesh Utsav Committee) Tj');
     expect(text).toContain('(Auctions Report) Tj');
     expect(text).toContain('(22/09/2026) Tj');
     expect(text).toContain('(Big laddu) Tj');

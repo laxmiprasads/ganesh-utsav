@@ -25,7 +25,8 @@ describe('contributionReport', () => {
   it('prints date, contributor, method, paid to and amount for every contribution', () => {
     const report = contributionReport([cashContribution(), upiContribution()], context);
 
-    expect(report.title).toBe('Contributions Report');
+    expect(report.title).toBe('Alkapuri Ganesh Utsav Committee');
+    expect(report.subtitle).toBe('Contributions Report');
     expect(report.columns.map(column => column.header)).toEqual(['Date', 'Contributor', 'Method', 'Paid To', 'Amount']);
     expect(report.columns[2].badge).toBe(true);
     expect(report.columns[4].align).toBe('right');
@@ -59,6 +60,8 @@ describe('contributionReport', () => {
     const text = Array.from(buildPdfReport(contributionReport([cashContribution(), upiContribution()], context)), byte => String.fromCharCode(byte)).join('');
 
     expect(text.startsWith('%PDF-1.4')).toBe(true);
+    expect(text).toContain('(Alkapuri Ganesh Utsav Committee) Tj');
+    expect(text).toContain('(Contributions Report) Tj');
     expect(text).toContain('(PAID TO) Tj');
     expect(text).toContain('(CONTRIBUTOR) Tj');
     expect(text).toContain('(Raju) Tj');

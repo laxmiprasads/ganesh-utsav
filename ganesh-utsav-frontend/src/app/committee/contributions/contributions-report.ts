@@ -32,8 +32,8 @@ export function contributionReport(rows: Contribution[], context: ContributionRe
   const bankTotal = rows.filter(r => r.paymentMethod === 'BANK_TRANSFER').reduce((sum, r) => sum + Number(r.amount || 0), 0);
 
   return {
-    title: 'Contributions Report',
-    subtitle: 'Ganesh Utsav Management System 2026',
+    title: 'Alkapuri Ganesh Utsav Committee',
+    subtitle: 'Contributions Report',
     meta: [
       `Generated on ${context.formatDate(generated, 'dd/MM/yyyy, hh:mm a')}`,
       search ? `${rows.length} contribution(s) matching "${search}"` : `${rows.length} contribution(s)`

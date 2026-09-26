@@ -173,7 +173,7 @@ function drawHeading(page: PdfPage, report: PdfReport, continued: boolean): numb
   let baseline = titleBaseline - 16;
   let lastBaseline = titleBaseline;
   if (!continued && report.subtitle) {
-    text(page, x, baseline, 10, false, COLOR_MUTED, report.subtitle);
+    text(page, x, baseline, 11, true, COLOR_PRIMARY, report.subtitle);
     lastBaseline = baseline;
     baseline -= 14;
   }
