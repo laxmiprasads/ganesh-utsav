@@ -45,7 +45,7 @@ DB_PORT=3306
 DB_NAME=ganesh_utsav_db
 DB_USERNAME=root
 DB_PASSWORD=root
-CORS_ALLOWED_ORIGINS=http://localhost:4200
+CORS_ALLOWED_ORIGINS=https://ganesh-utsav-frontend-production.up.railway.app
 UPLOAD_DIR=uploads
 JWT_SECRET=replace-with-a-long-production-secret
 ```
